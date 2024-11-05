@@ -1,0 +1,132 @@
+Problem Statement 18 (CRUD)
+
+Create the Collection and Insert Documents
+
+db.Student.insertMany([
+  {
+    "Roll_No": "A01",
+    "Name": "John Doe",
+    "Class": "SE",
+    "Marks": 45,
+    "Address": "123 Main Street",
+    "Enrolled_Courses": ["DBMS", "Math", "TOC"]
+  },
+  {
+    "Roll_No": "A02",
+    "Name": "Jane Smith",
+    "Class": "TE",
+    "Marks": 72,
+    "Address": "456 Elm Street",
+    "Enrolled_Courses": ["DBMS", "OS", "Data Science"]
+  },
+  {
+    "Roll_No": "A03",
+    "Name": "Michael Brown",
+    "Class": "FE",
+    "Marks": 58,
+    "Address": "789 Pine Road",
+    "Enrolled_Courses": ["TOC", "Physics"]
+  },
+  {
+    "Roll_No": "A04",
+    "Name": "Emily Davis",
+    "Class": "SE",
+    "Marks": 33,
+    "Address": "234 Maple Lane",
+    "Enrolled_Courses": ["DBMS", "TOC"]
+  },
+  {
+    "Roll_No": "A05",
+    "Name": "William Wilson",
+    "Class": "TE",
+    "Marks": 91,
+    "Address": "567 Cedar Avenue",
+    "Enrolled_Courses": ["Math", "Chemistry"]
+  },
+  {
+    "Roll_No": "A06",
+    "Name": "Olivia Taylor",
+    "Class": "TE",
+    "Marks": 85,
+    "Address": "890 Oak Boulevard",
+    "Enrolled_Courses": ["TOC", "Statistics"]
+  },
+  {
+    "Roll_No": "A07",
+    "Name": "James Martinez",
+    "Class": "SE",
+    "Marks": 49,
+    "Address": "345 Birch Street",
+    "Enrolled_Courses": ["DBMS", "Machine Learning"]
+  },
+  {
+    "Roll_No": "A08",
+    "Name": "Sophia Hernandez",
+    "Class": "FE",
+    "Marks": 77,
+    "Address": "678 Willow Way",
+    "Enrolled_Courses": ["TOC", "DBMS"]
+  },
+  {
+    "Roll_No": "A09",
+    "Name": "Lucas Lopez",
+    "Class": "SE",
+    "Marks": 19,
+    "Address": "910 Spruce Court",
+    "Enrolled_Courses": ["Calculus", "Physics"]
+  },
+  {
+    "Roll_No": "A10",
+    "Name": "Mia Clark",
+    "Class": "FE",
+    "Marks": 65,
+    "Address": "112 Aspen Trail",
+    "Enrolled_Courses": ["DBMS", "Statistics"]
+  }
+])
+
+1)List the names of students who have enrolled in the courses "DBMS" and "TOC".
+
+db.Student.find(
+  { Enrolled_Courses: { $all: ["DBMS", "TOC"] } }
+)
+
+2)List the Roll numbers and class of students who have marks more than 50 or are in class "TE".
+
+db.Student.find(
+  { $or: [{ Marks: { $gt: 50 } }, { Class: "TE" }] },
+  { Roll_No: 1, Class: 1, _id: 0 }
+)
+
+3)Update the entire record of roll number "A10".
+
+db.Student.updateOne(
+  { Roll_No: "A10" },
+  {
+    $set: {
+      Roll_No: "A10",
+      Name: "Updated Name",
+      Class: "Updated Class",
+      Marks: 100,
+      Address: "Updated Address",
+      Enrolled_Courses: ["Updated Course 1", "Updated Course 2"]
+    }
+  }
+)
+
+4)Display the names of students having the 3rd and 4th highest marks.
+
+db.Student.find({}, { Name: 1, Marks: 1, _id: 0 })
+  .sort({ Marks: -1 })
+  .skip(2)
+  .limit(2)
+
+5)Delete the records of students having marks less than 20.
+
+db.Student.deleteMany({ Marks: { $lt: 20 } })
+
+6)Delete only the first record from the collection.
+
+db.Student.deleteOne({})
+
+

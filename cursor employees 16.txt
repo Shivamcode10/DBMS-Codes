@@ -1,0 +1,54 @@
+/*Problem statement 16 (Cursors) 
+Consider a table Employee with schema as Employee(Emp_id, Emp_Name, Salary) 
+1.Write an explicit cursor to display records of all employees with salary greater than 50,000. 
+2. Write a PL/SQL block of code using Implicit Cursor that will display total number of 
+tuples in Employee table. 
+3.Write a PL/SQL block of code using Parameterized Cursor that will display salary of 
+employee id entered by the user. */create database beta;
+use beta;
+drop database beta;
+CREATE TABLE Employee (
+    Emp_id INT PRIMARY KEY,
+    Emp_Name VARCHAR(100),
+    Salary DECIMAL(10, 2)
+);
+
+-- Step 2: Insert sample data into the Employee table
+INSERT INTO Employee (Emp_id, Emp_Name, Salary) VALUES (1, 'Alice', 60000);
+INSERT INTO Employee (Emp_id, Emp_Name, Salary) VALUES (2, 'Bob', 45000);
+INSERT INTO Employee (Emp_id, Emp_Name, Salary) VALUES (3, 'Charlie', 70000);
+INSERT INTO Employee (Emp_id, Emp_Name, Salary) VALUES (4, 'Diana', 50000);
+INSERT INTO Employee (Emp_id, Emp_Name, Salary) VALUES (5, 'Eve', 80000);
+
+-- Step 3: Create the stored procedure
+DELIMITER //
+
+CREATE PROCEDURE DisplayEmployeeInfo(IN input_emp_id INT)  -- Renamed parameter to avoid conflict
+BEGIN
+    DECLARE emp_salary DECIMAL(10, 2);
+
+    -- 1. Display employees with salary greater than 50,000
+    SELECT Emp_id, Emp_Name, Salary
+    FROM Employee
+    WHERE Salary > 50000;
+
+    -- 2. Count the total number of employees
+    SELECT COUNT(*) AS Total_Employees FROM Employee;
+
+    -- 3. Get salary of an employee by ID
+    SELECT Salary INTO emp_salary
+    FROM Employee
+    WHERE Emp_id = input_emp_id;  -- Use the renamed parameter here
+
+    IF emp_salary IS NOT NULL THEN
+        SELECT CONCAT('Salary of Employee ID ', input_emp_id, ': ', emp_salary) AS Salary_Info;
+    ELSE
+        SELECT CONCAT('Employee ID ', input_emp_id, ' not found.') AS Salary_Info;
+    END IF;
+END //
+
+DELIMITER ;
+
+-- Step 4: Call the stored procedure (example)
+-- You can replace 1 with any valid Emp_id you want to check.
+CALL DisplayEmployeeInfo(1);

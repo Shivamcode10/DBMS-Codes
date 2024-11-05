@@ -1,0 +1,112 @@
+/*Problem Statement 20(Procedure/Functions) 
+Employee(emp_id, dept_id ,emp_name, Dob, salary , commission , job_title) 
+1.Consider the schema given above. Keep the commission column empty initially. Write a 
+Stored Procedure to record the employee commission based on following conditions. If salary 
+is more than 10000 then commission is 0.4%, if Salary is less than 10000 but experience is 
+more than 10 years then 0.35%, if salary is less than 3000 then commission is 0.25%. In the 
+remaining cases commission is 0.15%. 
+2.Write a PL/SQL Function that takes department ID and returns the name of the manager of 
+the department. */
+
+use beta;
+-- Step 1: Create the Employee Table
+CREATE TABLE Employee (
+    emp_id INT PRIMARY KEY AUTO_INCREMENT,
+    dept_id INT,
+    emp_name VARCHAR(100),
+    Dob DATE,
+    salary DECIMAL(10, 2),
+    commission DECIMAL(5, 2) DEFAULT NULL,
+    job_title VARCHAR(100)
+);
+
+-- Step 2: Create the Department Table
+CREATE TABLE Department (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(100),
+    manager_name VARCHAR(100)
+);
+
+-- Optional: Insert sample data into the Department table
+INSERT INTO Department (dept_id, dept_name, manager_name) VALUES
+(1, 'Sales', 'Alice Johnson'),
+(2, 'Marketing', 'Bob Smith'),
+(3, 'Engineering', 'Charlie Brown');
+
+-- Optional: Insert sample data into the Employee table
+INSERT INTO Employee (dept_id, emp_name, Dob, salary, job_title) VALUES
+(1, 'David Wilson', '1985-06-15', 12000, 'Sales Executive'),
+(2, 'Eve Davis', '1990-08-20', 9000, 'Marketing Specialist'),
+(3, 'Frank Harris', '1980-03-05', 2500, 'Engineer'),
+(1, 'Grace Taylor', '1995-11-11', 5000, 'Sales Associate'),
+(2, 'Helen Lee', '1988-02-18', 15000, 'Marketing Manager');
+
+-- Step 3: Create the Stored Procedure to Update Commissions
+DELIMITER $$
+
+CREATE PROCEDURE UpdateCommission()
+BEGIN
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE emp_salary DECIMAL(10, 2);
+    DECLARE emp_experience INT;
+    DECLARE emp_id INT;
+    
+    DECLARE emp_cursor CURSOR FOR
+        SELECT emp_id, salary, YEAR(CURDATE()) - YEAR(Dob) AS experience
+        FROM Employee;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN emp_cursor;
+
+    read_loop: LOOP
+        FETCH emp_cursor INTO emp_id, emp_salary, emp_experience;
+
+        IF done THEN
+            LEAVE read_loop;
+        END IF;
+
+        IF emp_salary > 10000 THEN
+            UPDATE Employee SET commission = emp_salary * 0.004 WHERE emp_id = emp_id;
+        ELSEIF emp_salary < 10000 AND emp_experience > 10 THEN
+            UPDATE Employee SET commission = emp_salary * 0.0035 WHERE emp_id = emp_id;
+        ELSEIF emp_salary < 3000 THEN
+            UPDATE Employee SET commission = emp_salary * 0.0025 WHERE emp_id = emp_id;
+        ELSE
+            UPDATE Employee SET commission = emp_salary * 0.0015 WHERE emp_id = emp_id;
+        END IF;
+    END LOOP;
+
+    CLOSE emp_cursor;
+END$$
+
+DELIMITER ;
+
+-- Step 4: Create the PL/SQL Function to Get Department Manager
+DELIMITER $$
+
+CREATE FUNCTION GetDepartmentManager(department_id INT)
+RETURNS VARCHAR(100)
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE manager VARCHAR(100);
+
+    SELECT manager_name INTO manager
+    FROM Department
+    WHERE dept_id = department_id;
+
+    RETURN manager;
+END$$
+
+DELIMITER ;
+
+
+-- Optional: Execute the procedure to update commissions
+ CALL UpdateCommission();
+
+-- Example usage of the function to get a manager's name
+ SELECT GetDepartmentManager(3); -- Replace 1 with the desired department ID
+
+
+

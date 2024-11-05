@@ -1,0 +1,82 @@
+Problem statement 4 ( Aggregation & Indexing)
+
+Step 1: Create the Movies_Data Collection and Insert Sample Documents
+
+db.Movies_Data.insertMany([
+  { "Movie_ID": "M01", "Movie_Name": "Inception", "Director": "Christopher Nolan", "Genre": "Sci-Fi", "BoxOfficeCollection": 850 },
+  { "Movie_ID": "M02", "Movie_Name": "Interstellar", "Director": "Christopher Nolan", "Genre": "Sci-Fi", "BoxOfficeCollection": 700 },
+  { "Movie_ID": "M03", "Movie_Name": "Dunkirk", "Director": "Christopher Nolan", "Genre": "War", "BoxOfficeCollection": 525 },
+  { "Movie_ID": "M04", "Movie_Name": "Titanic", "Director": "James Cameron", "Genre": "Romance", "BoxOfficeCollection": 2200 },
+  { "Movie_ID": "M05", "Movie_Name": "Avatar", "Director": "James Cameron", "Genre": "Sci-Fi", "BoxOfficeCollection": 2800 },
+  { "Movie_ID": "M06", "Movie_Name": "The Terminator", "Director": "James Cameron", "Genre": "Action", "BoxOfficeCollection": 600 },
+  { "Movie_ID": "M07", "Movie_Name": "Pulp Fiction", "Director": "Quentin Tarantino", "Genre": "Crime", "BoxOfficeCollection": 210 },
+  { "Movie_ID": "M08", "Movie_Name": "Kill Bill", "Director": "Quentin Tarantino", "Genre": "Action", "BoxOfficeCollection": 180 },
+  { "Movie_ID": "M09", "Movie_Name": "The Grand Budapest Hotel", "Director": "Wes Anderson", "Genre": "Comedy", "BoxOfficeCollection": 175 },
+  { "Movie_ID": "M10", "Movie_Name": "Moonrise Kingdom", "Director": "Wes Anderson", "Genre": "Comedy", "BoxOfficeCollection": 100 }
+])
+
+1. Display a list stating how many Movies are directed by each “Director”.
+
+db.Movies_Data.aggregate([
+  {
+    $group: {
+      _id: "$Director",
+      NumberOfMovies: { $sum: 1 }
+    }
+  }
+])
+
+2. Display list of Movies with the higest BixOfficeCollection in each Genre
+
+db.Movies_Data.aggregate([
+  {
+    $sort: { Genre: 1, BoxOfficeCollection: -1 }
+  },
+  {
+    $group: {
+      _id: "$Genre",
+      Movie_Name: { $first: "$Movie_Name" },
+      BoxOfficeCollection: { $first: "$BoxOfficeCollection" }
+    }
+  }
+])
+
+3. Display list of Movies with the higest BoxOfficeCollection in each Genre in ascending
+order of BoxOfficeCollection.
+
+db.Movies_Data.aggregate([
+  {
+    $sort: { Genre: 1, BoxOfficeCollection: -1 }
+  },
+  {
+    $group: {
+      _id: "$Genre",
+      Movie_Name: { $first: "$Movie_Name" },
+      BoxOfficeCollection: { $first: "$BoxOfficeCollection" }
+    }
+  },
+  {
+    $sort: { BoxOfficeCollection: 1 }
+  }
+])
+
+4. Create an index on field Movie_ID.
+
+db.Movies_Data.createIndex({ Movie_ID: 1 })
+
+5. Create an indwx on fields “Movie_Name” and “Director”.
+
+db.Movies_Data.createIndex({ Movie_Name: 1, Director: 1 })
+
+
+6. Drop an index on field Movie_ID.
+
+db.Movies_Data.dropIndex({ Movie_ID: 1 })
+
+
+7. Drop an index on fields “Movie_Name” and “Director”.
+
+db.Movies_Data.dropIndex({ Movie_Name: 1, Director: 1 })
+
+
+

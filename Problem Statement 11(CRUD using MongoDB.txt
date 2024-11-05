@@ -1,0 +1,55 @@
+Problem Statement 11(CRUD using MangoDB)
+
+Step 1: Create the Social_Media Collection and Insert 20 Documents
+
+db.Social_Media.insertMany([
+  { "User_Id": "U01", "User_Name": "Alice", "No_of_Posts": 120, "No_of_Friends": 50, "Friends_List": ["Bob", "Charlie", "David"], "Interests": ["Music", "Travel", "Photography"] },
+  { "User_Id": "U02", "User_Name": "Bob", "No_of_Posts": 80, "No_of_Friends": 30, "Friends_List": ["Alice", "Eve", "Frank"], "Interests": ["Movies", "Cooking"] },
+  { "User_Id": "U03", "User_Name": "Charlie", "No_of_Posts": 200, "No_of_Friends": 100, "Friends_List": ["Alice", "David", "Grace"], "Interests": ["Reading", "Gaming"] },
+  { "User_Id": "U04", "User_Name": "David", "No_of_Posts": 50, "No_of_Friends": 10, "Friends_List": ["Charlie", "Bob"], "Interests": ["Hiking", "Fitness"] },
+  { "User_Id": "U05", "User_Name": "Eve", "No_of_Posts": 300, "No_of_Friends": 60, "Friends_List": ["Bob", "Alice"], "Interests": ["Fashion", "Tech"] },
+  { "User_Id": "U06", "User_Name": "Frank", "No_of_Posts": 95, "No_of_Friends": 5, "Friends_List": ["David", "Charlie"], "Interests": ["Cooking", "Sports"] },
+  { "User_Id": "U07", "User_Name": "Grace", "No_of_Posts": 150, "No_of_Friends": 70, "Friends_List": ["Charlie", "Eve", "Frank"], "Interests": ["Art", "Travel"] },
+  { "User_Id": "U08", "User_Name": "Hannah", "No_of_Posts": 45, "No_of_Friends": 8, "Friends_List": ["Alice", "David"], "Interests": ["Writing", "Dance"] },
+  { "User_Id": "U09", "User_Name": "Ivy", "No_of_Posts": 210, "No_of_Friends": 110, "Friends_List": ["Grace", "Frank", "Bob"], "Interests": ["Coding", "Movies"] },
+  { "User_Id": "U10", "User_Name": "Jack", "No_of_Posts": 180, "No_of_Friends": 90, "Friends_List": ["David", "Alice"], "Interests": ["Music", "Basketball"] },
+  { "User_Id": "U11", "User_Name": "Kate", "No_of_Posts": 40, "No_of_Friends": 4, "Friends_List": ["Hannah", "Bob"], "Interests": ["Gardening", "Yoga"] },
+  { "User_Id": "U12", "User_Name": "Liam", "No_of_Posts": 110, "No_of_Friends": 25, "Friends_List": ["Grace", "Eve"], "Interests": ["Travel", "Science"] },
+  { "User_Id": "U13", "User_Name": "Mason", "No_of_Posts": 175, "No_of_Friends": 65, "Friends_List": ["Frank", "Ivy"], "Interests": ["Books", "Photography"] },
+  { "User_Id": "U14", "User_Name": "Noah", "No_of_Posts": 88, "No_of_Friends": 15, "Friends_List": ["Liam", "Hannah"], "Interests": ["Skating", "Robotics"] },
+  { "User_Id": "U15", "User_Name": "Olivia", "No_of_Posts": 300, "No_of_Friends": 100, "Friends_List": ["Mason", "Jack"], "Interests": ["Acting", "Music"] },
+  { "User_Id": "U16", "User_Name": "Paul", "No_of_Posts": 105, "No_of_Friends": 20, "Friends_List": ["Kate", "David"], "Interests": ["Swimming", "Volunteering"] },
+  { "User_Id": "U17", "User_Name": "Quincy", "No_of_Posts": 67, "No_of_Friends": 7, "Friends_List": ["Olivia", "Ivy"], "Interests": ["Cycling", "Painting"] },
+  { "User_Id": "U18", "User_Name": "Ryan", "No_of_Posts": 134, "No_of_Friends": 40, "Friends_List": ["Liam", "Noah"], "Interests": ["Climbing", "Video Games"] },
+  { "User_Id": "U19", "User_Name": "Sophia", "No_of_Posts": 50, "No_of_Friends": 12, "Friends_List": ["Hannah", "Kate"], "Interests": ["Shopping", "Blogging"] },
+  { "User_Id": "U20", "User_Name": "Tom", "No_of_Posts": 200, "No_of_Friends": 55, "Friends_List": ["Ryan", "Quincy"], "Interests": ["Fishing", "Camping"] }
+])
+
+1)List all users from the Social_Media collection in a formatted manner.
+
+db.Social_Media.find().pretty()
+
+2)Find all users having a number of posts greater than 100.
+
+db.Social_Media.find({ No_of_Posts: { $gt: 100 } })
+
+3)List the users having a number of posts greater than 100.
+
+db.Social_Media.find(
+  { No_of_Posts: { $gt: 100 } },
+  { User_Name: 1, _id: 0 }
+)
+
+4)Display the user IDs and friends list of users who have more than 5 friends.
+
+db.Social_Media.find(
+  { No_of_Friends: { $gt: 5 } },
+  { User_Id: 1, Friends_List: 1, _id: 0 }
+)
+
+5)Display all users with the number of posts in descending order.
+
+db.Social_Media.find().sort({ No_of_Posts: -1 })
+
+
+
